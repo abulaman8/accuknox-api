@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'authentication',
+    'core',
 ]
 
 SIMPLE_JWT = {
