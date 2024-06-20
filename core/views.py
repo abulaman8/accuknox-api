@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -59,8 +60,8 @@ def send_friend_request(request):
         return Response({"error": "Friend request already sent"}, status=status.HTTP_400_BAD_REQUEST)
     last_3 = FriendRequest.objects.filter(
         from_user=from_user).order_by('-created_at').all()[:3]
-    times = [r.created_at.minute for r in last_3]
-    if len(times) == 3 and times[0] == times[1] == times[2]:
+    times = [r.created_at.timestamp() for r in last_3]
+    if len(times) == 3 and datetime.now().timestamp() - min(times) < 60:
         return Response({"error": "You can only 3 send friend requests in 1 minute"}, status=status.HTTP_400_BAD_REQUEST)
     FriendRequest.objects.create(from_user=from_user, to_user=user)
     return Response({"message": "Friend request sent successfully"}, status=status.HTTP_200_OK)
